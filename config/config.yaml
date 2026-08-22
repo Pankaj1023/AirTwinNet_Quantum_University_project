@@ -1,0 +1,21 @@
+project:
+  name: AirTwinNet
+  version: 0.1.0
+
+data:
+  raw_data_path: data/raw
+  processed_data_path: data/processed
+  external_data_path: data/external
+
+artifacts:
+  model_path: artifacts/models
+  report_path: artifacts/reports
+
+logs:
+  path: logs
+
+notebooks:
+  path: notebooks
+
+test:
+  path: test

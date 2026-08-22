@@ -5,3 +5,4 @@ __pycache__/
 logs/
 artifacts/
 .ipynb_checkpoints/
+*.egg-info/

@@ -1,0 +1,1 @@
+print("AirTwinNet application started successfully")
