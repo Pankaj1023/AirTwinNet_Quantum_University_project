@@ -1,17 +1,18 @@
 from flask import Flask, jsonify
 
 
-def create_dashboard_app():
+def create_dashboard_app(dashboard_state=None):
 
     app = Flask(__name__)
 
-    dashboard_state = {
-        "pm2_5": None,
-        "pm10": None,
-        "aqi": None,
-        "confidence": None,
-        "explanation": None
-    }
+    if dashboard_state is None:
+        dashboard_state = {
+            "pm2_5": None,
+            "pm10": None,
+            "aqi": None,
+            "confidence": None,
+            "explanation": None
+        }
 
     @app.route("/")
     def home():
