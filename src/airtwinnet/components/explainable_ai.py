@@ -85,3 +85,127 @@ class ExplainableAI:
                 importance
             )
         )
+
+    def explain_model(
+        self,
+        model,
+        feature_names=None
+    ):
+
+        if feature_names is None:
+            feature_names = self.feature_names
+
+        if len(feature_names) != len(
+            self.feature_names
+        ):
+            raise ValueError(
+                "Feature names count mismatch."
+            )
+
+        explanations = {}
+
+        for index, target in enumerate(
+            ["pm2_5", "pm10"]
+        ):
+
+            estimator = model.estimators_[index]
+
+            importance = estimator.feature_importances_
+
+            feature_importance = dict(
+                zip(
+                    feature_names,
+                    importance
+                )
+            )
+
+            sorted_features = sorted(
+                feature_importance.items(),
+                key=lambda item: item[1],
+                reverse=True
+            )
+
+            dominant_feature = sorted_features[0]
+
+            explanations[target] = {
+                "feature_importance": feature_importance,
+                "dominant_feature": dominant_feature[0],
+                "dominant_importance": round(
+                    float(dominant_feature[1]),
+                    4
+                )
+            }
+
+        return explanations
+
+    def explain_separate_models(
+        self,
+        pm25_model,
+        pm10_model,
+        feature_names
+    ):
+
+        if len(feature_names) != len(
+            self.feature_names
+        ):
+            raise ValueError(
+                "Feature names count mismatch."
+            )
+
+        explanations = {}
+
+        models = {
+            "pm2_5": pm25_model,
+            "pm10": pm10_model
+        }
+
+        for target, model in models.items():
+
+            importance = model.feature_importances_
+
+            feature_importance = dict(
+                zip(
+                    feature_names,
+                    importance
+                )
+            )
+
+            sorted_features = sorted(
+                feature_importance.items(),
+                key=lambda item: item[1],
+                reverse=True
+            )
+
+            dominant_feature = sorted_features[0]
+
+            explanations[target] = {
+                "feature_importance": feature_importance,
+                "dominant_feature": dominant_feature[0],
+                "dominant_importance": round(
+                    float(dominant_feature[1]),
+                    4
+                )
+            }
+
+        return explanations
+
+    def generate_explanation(
+        self,
+        model
+    ):
+
+        explanations = self.explain_model(model)
+
+        pm25_feature = explanations[
+            "pm2_5"
+        ]["dominant_feature"]
+
+        pm10_feature = explanations[
+            "pm10"
+        ]["dominant_feature"]
+
+        return (
+            f"PM2.5 prediction is mainly influenced "
+            f"by {pm25_feature}, while PM10 prediction "
+            f"is mainly influenced by {pm10_feature}."
+        )
